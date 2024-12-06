@@ -1,0 +1,51 @@
+Retrieving secret value for Variable from Variable Group through a Pipeline in Azure DevOps
+
+
+1. Go to Pipelines
+    Navigate to the Pipelines section in Azure DevOps.
+2. Click on New Pipeline
+    Select the option to create a new pipeline.
+3. Select ‘Azure Repos Git’ Option
+    Choose the Azure Repos Git option from the available choices.
+4. Select Repository
+    Pick the repository you want to use for the pipeline.
+5. Select # Starter Pipeline
+    Choose the Starter pipeline template.
+6. Paste Your YAML Pipeline
+    Copy and paste your YAML pipeline configuration into the provided editor.
+
+trigger:
+- master
+variables:
+- group: Dev Users - DevOps
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- powershell: |
+    "the value: $(Password.Deploy.Icon.Dev)" | Out-File -FilePath "$(Build.ArtifactStagingDirectory)\DisplaySecret.txt"
+  displayName: 'Write secret value to file'
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+  displayName: 'Publish Artifact'
+
+* Replace the branch name with your branch and Variablr Group name and Variable with your Values.
+
+1. Save and Run
+    Save the pipeline configuration and run the pipeline.
+2. Wait for Completion of Pipeline
+    Allow the pipeline to complete its execution.
+3. Go to Pipeline Run
+    Once the pipeline execution is complete, navigate to the pipeline run details.
+4. Click on 1 Published
+    Click on the "1 Published" link. This will redirect you to the artifact location.
+5. Download the Published File
+    Download the file from the artifact location.
+6. Get Your Secret Value
+    Open the downloaded file to retrieve your secret value for the variable.
+
